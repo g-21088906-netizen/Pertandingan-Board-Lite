@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Pemarkahan Berselawat — Lite v2.3 (Static + Dropdown + Cetak)</title>
+<style>
+:root{--bg:#f7f9fc;--card:#fff;--ink:#0b1b2b;--border:#e5eaf3;--accent:#2563eb;--muted:#6b7280}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:ui-sans-serif,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--ink)}
+.container{max-width:1100px;margin:auto;padding:1rem}
+h1{margin:.2rem 0 1rem 0;font-size:1.5rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;box-shadow:0 8px 22px rgba(0,0,0,.05);margin-bottom:1rem}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+label{display:flex;flex-direction:column;gap:.35rem;font-size:.95rem}
+input,select,button{font:inherit;padding:.65rem .8rem;border-radius:.7rem;border:1px solid var(--border)}
+input[type=number]{width:90px}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.ghost{background:transparent}
+.hint{color:var(--muted);font-size:.92rem}
+.total-box{font-size:1.05rem;font-weight:800}
+.progress{height:10px;background:#e8eefc;border-radius:999px;overflow:hidden}
+.progress>i{display:block;height:100%;width:0;background:#2563eb}
+.small{font-size:.86rem}
+.tbl-wrap{max-height:420px;overflow:auto;border:1px solid var(--border);border-radius:.6rem}
+.grid{display:grid;gap:.7rem}
+@media (min-width:760px){.grid-2{grid-template-columns:1fr 1fr}}
+.kitem{display:flex;justify-content:space-between;align-items:center;border:1px dashed var(--border);border-radius:.7rem;padding:.55rem .7rem;background:#fbfdff}
+.kitem>div{font-weight:600}
+.kitem .max{font-weight:600;color:#374151}
+.kitem input{width:90px}
+.btns{display:inline-flex;border:1px solid var(--border);border-radius:.5rem;overflow:hidden;vertical-align:middle}
+.btns button{border:0;padding:.35rem .6rem;background:#f3f6ff}
+.btns button:active{transform:translateY(1px)}
+@media print{
+  body{background:#fff;color:#000}
+  .card,.container{box-shadow:none;border:0}
+  #controls{display:none}
+  table{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pemarkahan Berselawat — <span class="hint">Lite v2.3</span></h1>
+
+  <section class="card" id="controls">
+    <div class="grid grid-2">
+      <div>
+        <label>Nama Kumpulan
+          <select id="team">
+            <option value="">-- Pilih / Taip --</option>
+            <option>5 Safa</option>
+            <option>5 Marwah</option>
+            <option>6 Raudhah</option>
+            <option>6 Huda</option>
+          </select>
+        </label>
+        <div style="margin-top:.4rem">
+          <div class="total-box">Jumlah: <span id="total">0</span> / <span id="maxTotal">100</span></div>
+          <div class="progress"><i id="bar"></i></div>
+          <div class="small hint">Peratus: <span id="percent">0</span>%</div>
+        </div>
+        <div class="row" style="margin-top:.6rem">
+          <button id="save" class="primary">Simpan Markah</button>
+          <button id="fullMarks">Markah Penuh</button>
+          <button id="resetForm" class="ghost">Kosongkan Borang</button>
+        </div>
+      </div>
+      <div>
+        <div class="hint" style="margin:0 0 .4rem 0">Isi markah (0 hingga maksimum):</div>
+        <div class="grid" id="criteriaList">
+          <div class="kitem"><div>Suara &amp; Fasih</div>
+            <div><span class="max">0–30</span>
+              <div class="btns"><button type="button" data-dec="suara_fasih">–</button><button type="button" data-inc="suara_fasih">+</button></div>
+              <input type="number" min="0" max="30" value="0" id="suara_fasih">
+            </div>
+          </div>
+          <div class="kitem"><div>Gaya Persembahan</div>
+            <div><span class="max">0–20</span>
+              <div class="btns"><button type="button" data-dec="gaya_persembahan">–</button><button type="button" data-inc="gaya_persembahan">+</button></div>
+              <input type="number" min="0" max="20" value="0" id="gaya_persembahan">
+            </div>
+          </div>
+          <div class="kitem"><div>Keseragaman &amp; Variasi</div>
+            <div><span class="max">0–20</span>
+              <div class="btns"><button type="button" data-dec="keseragaman_variasi">–</button><button type="button" data-inc="keseragaman_variasi">+</button></div>
+              <input type="number" min="0" max="20" value="0" id="keseragaman_variasi">
+            </div>
+          </div>
+          <div class="kitem"><div>Bahasa &amp; Lagu</div>
+            <div><span class="max">0–20</span>
+              <div class="btns"><button type="button" data-dec="bahasa_lagu">–</button><button type="button" data-inc="bahasa_lagu">+</button></div>
+              <input type="number" min="0" max="20" value="0" id="bahasa_lagu">
+            </div>
+          </div>
+          <div class="kitem"><div>Bonus (Alat, Pakaian, Keanggunan)</div>
+            <div><span class="max">0–10</span>
+              <div class="btns"><button type="button" data-dec="bonus">–</button><button type="button" data-inc="bonus">+</button></div>
+              <input type="number" min="0" max="10" value="0" id="bonus">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row" style="justify-content:space-between">
+      <strong>Keputusan</strong>
+      <div class="row">
+        <button id="exportCsv" class="ghost">Eksport CSV</button>
+        <button onclick="window.print()">Cetak Laporan</button>
+        <button id="resetAll" class="ghost">Reset Semua</button>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="margin-top:.6rem">
+      <table id="tbl">
+        <thead>
+          <tr id="headRow">
+            <th>#</th><th>Kumpulan</th>
+            <th>Suara &amp; Fasih</th><th>Gaya Persembahan</th><th>Keseragaman &amp; Variasi</th>
+            <th>Bahasa &amp; Lagu</th><th>Bonus</th>
+            <th>Jumlah</th><th>Peratus</th><th>Masa</th><th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td class="small" colspan="3">Rekod: <span id="recCount">0</span></td>
+            <td class="small" colspan="3">Markah Tertinggi: <span id="topScore">0</span></td>
+            <td class="small" colspan="3">Kumpulan Teratas: <span id="topTeam">—</span></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const KEY="berselawat_v23_records";
+  const $=id=>document.getElementById(id);
+  const CRIT=[
+    {id:"suara_fasih", max:30},
+    {id:"gaya_persembahan", max:20},
+    {id:"keseragaman_variasi", max:20},
+    {id:"bahasa_lagu", max:20},
+    {id:"bonus", max:10},
+  ];
+  const totalMax=()=>CRIT.reduce((s,c)=>s+c.max,0);
+  let data=load();
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+  function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+  function clamp(v,min,max){v=parseInt(v||0,10);if(!Number.isFinite(v))v=0;return Math.max(min,Math.min(max,v));}
+  function calcTotal(){
+    let t=0;CRIT.forEach(c=>{const el=$(c.id);const v=clamp(el.value,0,c.max);el.value=v;t+=v;});
+    const max=totalMax();const p=max?Math.round((t/max)*100):0;
+    $('total').textContent=t;$('maxTotal').textContent=max;$('percent').textContent=p;$('bar').style.width=p+'%';
+    return t;
+  }
+  CRIT.forEach(c=>{
+    const el=$(c.id);
+    ['input','change'].forEach(evt=>el.addEventListener(evt,calcTotal,{passive:true}));
+    document.querySelector(`[data-inc="${c.id}"]`).onclick=()=>{el.value=clamp(+el.value+1,0,c.max);calcTotal();};
+    document.querySelector(`[data-dec="${c.id}"]`).onclick=()=>{el.value=clamp(+el.value-1,0,c.max);calcTotal();};
+  });calcTotal();
+  $('fullMarks').onclick=()=>{CRIT.forEach(c=>$(c.id).value=c.max);calcTotal();};
+  $('resetForm').onclick=()=>{$('team').value='';CRIT.forEach(c=>$(c.id).value=0);calcTotal();$('team').focus();};
+  $('save').onclick=()=>{
+    const team=($('team').value||'').trim();if(!team)return alert('Isi nama kumpulan.');
+    const rec={team,suara_fasih:+$('suara_fasih').value,gaya_persembahan:+$('gaya_persembahan').value,
+      keseragaman_variasi:+$('keseragaman_variasi').value,bahasa_lagu:+$('bahasa_lagu').value,bonus:+$('bonus').value};
+    rec.total=rec.suara_fasih+rec.gaya_persembahan+rec.keseragaman_variasi+rec.bahasa_lagu+rec.bonus;rec.ts=new Date().toISOString();
+    data.push(rec);save();render();$('resetForm').click();
+  };
+  function render(){
+    const tb=document.querySelector('#tbl tbody');tb.innerHTML='';let i=1,top=null;const max=totalMax();
+    data.forEach((r,idx)=>{
+      if(!top||r.total>top.total)top={...r,idx};const p=max?Math.round((r.total/max)*100):0;
+      const tr=document.createElement('tr');tr.innerHTML=`<td>${i++}</td><td>${esc(r.team)}</td>
+        <td>${r.suara_fasih}</td><td>${r.gaya_persembahan}</td><td>${r.keseragaman_variasi}</td><td>${r.bahasa_lagu}</td><td>${r.bonus}</td>
+        <td><strong>${r.total}</strong></td><td>${p}%</td><td>${fmt(r.ts)}</td>
+        <td><button data-i="${idx}">Padam</button></td>`;tb.appendChild(tr);
+    });
+    $('recCount').textContent=data.length;$('topScore').textContent=top?top.total:0;$('topTeam').textContent=top?top.team:'—';
+    tb.querySelectorAll('button').forEach(btn=>btn.onclick=e=>{const i=+btn.getAttribute('data-i');data.splice(i,1);save();render();});
+  }
+  $('exportCsv').onclick=()=>{
+    const headers=['Kumpulan','Suara & Fasih','Gaya Persembahan','Keseragaman & Variasi','Bahasa & Lagu','Bonus','Jumlah','Peratus','Masa'];
+    const rows=data.map(r=>[r.team,r.suara_fasih,r.gaya_persembahan,r.keseragaman_variasi,r.bahasa_lagu,r.bonus,r.total,
+      (totalMax()?Math.round((r.total/totalMax())*100):0)+'%',fmt(r.ts)]);
+    const csv=[headers].concat(rows).map(a=>a.map(csvEsc).join(',')).join('\\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='keputusan_berselawat_v23.csv';a.click();
+  };
+  $('resetAll').onclick=()=>{if(confirm('Padam semua rekod?')){data=[];save();render();}};
+  function esc(s){return (s||'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+  function fmt(s){try{return new Date(s).toLocaleString('ms-MY',{dateStyle:'medium',timeStyle:'short'})}catch(e){return s}}
+  function csvEsc(s){s=(s==null?'':String(s));return /[",\\n]/.test(s)?('"'+s.replace(/"/g,'""')+'"'):s}
+  render();
+})();
+</script>
+</body>
+</html>
